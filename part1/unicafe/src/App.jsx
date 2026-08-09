@@ -1,29 +1,32 @@
 import { useState } from "react";
 
 const Statistics = ({ good, neutral, bad }) => {
-  const getAll = () => {
-    return good + neutral + bad;
-  };
+  const getAll = () => good + neutral + bad;
 
   const getAverage = () => {
     const stat = good + bad * -1;
     return stat / getAll();
   };
 
-  const getPositivePercent = () => {
-    return (good / getAll()) * 100;
-  };
+  const getPositivePercent = () => (good / getAll()) * 100;
+  const showStatistics = () => getAll() !== 0;
 
   return (
     <div>
       <h2>statistics</h2>
 
-      <div>good {good}</div>
-      <div>neutral {neutral}</div>
-      <div>bad {bad}</div>
-      <div>all {getAll()}</div>
-      <div>average {getAverage()}</div>
-      <div>positive {getPositivePercent()} %</div>
+      {showStatistics() ? (
+        <>
+          <div>good {good}</div>
+          <div>neutral {neutral}</div>
+          <div>bad {bad}</div>
+          <div>all {getAll()}</div>
+          <div>average {getAverage()}</div>
+          <div>positive {getPositivePercent()} %</div>
+        </>
+      ) : (
+        "No feedback given"
+      )}
     </div>
   );
 };
