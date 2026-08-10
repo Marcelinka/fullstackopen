@@ -3,6 +3,7 @@ import personService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -16,6 +17,8 @@ const App = () => {
 
   const [newNumber, setNewNumber] = useState("");
   const handleNewNumberChange = (event) => setNewNumber(event.target.value);
+
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleAddNewPerson = async (event) => {
     event.preventDefault();
@@ -44,9 +47,17 @@ const App = () => {
       return void alert(`${newNumber} is already added to phonebook`);
     }
 
-    personService
-      .create({ name: newName, number: newNumber, id: persons.length + 1 })
-      .then((newPerson) => setPersons(persons.concat([newPerson])));
+    const newPerson = await personService.create({
+      name: newName,
+      number: newNumber,
+    });
+
+    setPersons(persons.concat([newPerson]));
+
+    setSuccessMessage(`Added ${newPerson.name}`);
+    setTimeout(() => {
+      setSuccessMessage(null);
+    }, 5000);
   };
 
   const [filter, setFilter] = useState("");
@@ -69,6 +80,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
       <Filter value={filter} onChange={handleFilterChange} />
 
       <h2>add a new</h2>
