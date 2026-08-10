@@ -19,6 +19,7 @@ const App = () => {
   const handleNewNumberChange = (event) => setNewNumber(event.target.value);
 
   const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleAddNewPerson = async (event) => {
     event.preventDefault();
@@ -71,9 +72,20 @@ const App = () => {
   const remove = (person) => {
     const agreed = confirm(`Delete ${person.name}?`);
     if (agreed) {
-      personService.remove(person.id).then(() => {
-        setPersons(persons.filter((p) => p.id !== person.id));
-      });
+      personService
+        .remove(person.id)
+        .then(() => {
+          setPersons(persons.filter((p) => p.id !== person.id));
+        })
+        .catch(() => {
+          setErrorMessage(
+            `Information of ${person.name} has already been removed from server`,
+          );
+          setPersons(persons.filter((p) => p.id !== person.id));
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
     }
   };
 
@@ -81,6 +93,8 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={successMessage} />
+      <Notification type="error" message={errorMessage} />
+
       <Filter value={filter} onChange={handleFilterChange} />
 
       <h2>add a new</h2>
