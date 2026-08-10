@@ -1,0 +1,14 @@
+{
+  "name": "fullstackopen",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marcelinka/fullstackopen.git"
+  },
+  "scripts": {
+    "init": "node scripts/init-project.js",
+    "init:part0": "npm run init -- part0",
+    "init:part1": "npm run init -- part1",
+    "init:part2": "npm run init -- part2"
+  }
+}
