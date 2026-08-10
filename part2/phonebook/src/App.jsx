@@ -17,12 +17,24 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const handleNewNumberChange = (event) => setNewNumber(event.target.value);
 
-  const handleAddNewPerson = (event) => {
+  const handleAddNewPerson = async (event) => {
     event.preventDefault();
 
-    const nameAlreadyExist = persons.some((person) => person.name === newName);
-    if (nameAlreadyExist) {
-      return void alert(`${newName} is already added to phonebook`);
+    const existingPerson = persons.find((person) => person.name === newName);
+    if (existingPerson) {
+      const agreed = confirm(
+        `${existingPerson.name} is already added to phonebook, replace the old number with a new one?`,
+      );
+      if (agreed) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+        const person = await personService.update(
+          existingPerson.id,
+          updatedPerson,
+        );
+        return void setPersons(
+          persons.map((p) => (p.id === person.id ? person : p)),
+        );
+      }
     }
 
     const numberAlreadyExist = persons.some(
