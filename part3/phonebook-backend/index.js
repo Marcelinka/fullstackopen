@@ -48,6 +48,41 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
+const generateId = () => {
+  const getRandomNumber = () => Math.floor(Math.random() * (5000 - 1) + 1);
+
+  let newId = getRandomNumber();
+  while (persons.some((p) => p.id === String(newId))) {
+    newId = getRandomNumber();
+  }
+
+  return String(newId);
+};
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  if (!body.name) {
+    return response.status(400).json({
+      error: "name is missing",
+    });
+  }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: "number is missing",
+    });
+  }
+
+  const person = {
+    id: generateId(),
+    ...body,
+  };
+
+  persons = persons.concat(person);
+  response.json(person);
+});
+
 app.get("/info", (request, response) => {
   response.send(`
     <p>Phonebook has info for ${persons.length} people</p>
