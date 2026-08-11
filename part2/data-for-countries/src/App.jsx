@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import countryService from "./services/countries";
 import Country from "./components/Country";
+import CountriesList from "./components/CountriesList";
 
 const App = () => {
   const [country, setCountry] = useState("");
@@ -9,6 +10,8 @@ const App = () => {
   const onChangeCountry = (event) => {
     setCountry(event.target.value);
   };
+
+  const onShowCountry = (countryName) => setCountry(countryName);
 
   useEffect(() => {
     countryService.getAll().then((countries) => setCountriesList(countries));
@@ -32,9 +35,9 @@ const App = () => {
       return <Country country={chosenCountry} />;
     }
 
-    return filteredList.map((c) => (
-      <div key={c.name.common}>{c.name.common}</div>
-    ));
+    return (
+      <CountriesList countries={filteredList} showCountry={onShowCountry} />
+    );
   };
 
   return (
